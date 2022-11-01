@@ -6,8 +6,18 @@ fn main() {
     println!("Guess the number");
     let random_number = generate_random_number();
     loop {
-        println!("Input the nuber");
-        let guessed_number = read_guessed_number();
+        println!("Input the number");
+        let maybe_guessed_number = try_read_guessed_number();
+
+        let guessed_number;
+
+        match maybe_guessed_number {
+            Some(num) => guessed_number = num,
+            None => {
+                println!("Invalid input");
+                continue;
+            }
+        }
 
         // println!("You guessed: {guessed_number}");
 
@@ -29,7 +39,7 @@ fn main() {
     println!("Game finished");
 }
 
-fn read_guessed_number() -> usize {
+fn try_read_guessed_number() -> Option<usize> {
     let mut guess = String::new();
 
     let input = stdin();
@@ -37,7 +47,7 @@ fn read_guessed_number() -> usize {
         .read_line(&mut guess)
         .expect("failed to read from stdin");
 
-    guess.trim().parse().expect("input must be a number")
+    guess.trim().parse().ok()
 }
 
 fn generate_random_number() -> usize {
